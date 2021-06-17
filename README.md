@@ -90,6 +90,15 @@ export class CounterComponent {
 `Vue`
 
 ```ts
+<template>
+  <p>
+    <button class="btn" @click="inc()">+</button>
+    <button class="btn" @click="dec()">-</button>
+    <button class="btn" @click="asyncInc()">async(+)</button>
+    {{ state.loading?'loading...':state.count }}
+  </p>
+</template>
+
 export default {
   name: "Counter",
   components: {},
