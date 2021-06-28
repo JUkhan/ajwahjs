@@ -1,6 +1,6 @@
 {
   "name": "ajwahjs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Framework agnostic state management tool without ceremonies and boilerplates",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -76,8 +76,11 @@
     "url": "git+https://github.com/JUkhan/ajwahjs.git"
   },
   "keywords": [
-    "rx",
+    "angular",
+    "react",
+    "vue",
     "redux",
+    "reactive",
     "rxjs",
     "unidirectional"
   ],

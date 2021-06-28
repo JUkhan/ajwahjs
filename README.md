@@ -5,21 +5,24 @@ Framework agnostic state management tool without ceremonies and boilerplates
 `CounterState`
 
 ```ts
-interface CounterModel {
+interface CounterState {
   count: number;
   loading: bool;
 }
 
-class CounterState extends StateController<CounterModel> {
+class CounterStateCtrl extends StateController<CounterState> {
   constructor() {
     super({ count: 0, loading: false });
   }
+
   inc() {
     this.emit({ count: this.state.count++ });
   }
+
   dec() {
     this.emit({ count: this.state.count-- });
   }
+
   async asyncInc() {
     this.emit({ loading: true });
     await delay(1000);
@@ -33,7 +36,7 @@ class CounterState extends StateController<CounterModel> {
 `Vanilla js`
 
 ```ts
-const csCtrl = Get(CounterState);
+const csCtrl = Get(CounterStateCtrl);
 csCtrl.stream$.subscrie(console.log);
 csCtrl.inc();
 csCtrl.dec();
@@ -44,7 +47,7 @@ csCtrl.asyncInc();
 
 ```tsx
 const CounterComponent = () => {
-  const csCtrl = Get(CounterState);
+  const csCtrl = Get(CounterStateCtrl);
 
   const data = useStream(csCtrl.stream$, csCtrl.state);
 
@@ -83,7 +86,7 @@ const CounterComponent = () => {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CounterComponent {
-  constructor(public csCtrl: CounterState) {}
+  constructor(public csCtrl: CounterStateCtrl) {}
 }
 ```
 
@@ -103,7 +106,7 @@ export default {
   name: "Counter",
   components: {},
   setup() {
-    const csCtrl = Get(CounterState);
+    const csCtrl = Get(CounterStateCtrl);
 
     const state = useStream(csCtrl.stream$, csCtrl.state);
 
@@ -127,7 +130,7 @@ export default {
 ```ts
 onInit() {
     this.mapActionToState(
-      this.action$.whereType('asyncInc').pipe(
+      this.action$.isA(AsyncInc).pipe(
         tap(action => this.emit({ loading: true})),
         delay(500),
         map(action => ({ loading: false, count: this.state.count + 1 }))
@@ -141,10 +144,10 @@ onInit() {
 ```ts
 onInit() {
     this.registerEffects(
-        this.action$.whereType("SearchInput").pipe(
+        this.action$.isA(SearchInput).pipe(
             debounceTime(320),
             distinctUntilChanged(),
-            map((action) => ({ ...action, type: "SearchingTodod" }))
+            map(action => findTodos(action.text)))
         )
     );
 }
@@ -157,7 +160,7 @@ onInit() {
  get todos$() {
     return combineLatest([
       this.stream$,
-      this.remoteStream<SearchCategory>(SearchCategoryStateController)
+      this.remoteStream<SearchCategory>(SearchCategoryStateCtrl)
     ]).pipe(
       map(([todos, searchCategory]) => {
         switch (searchCategory) {

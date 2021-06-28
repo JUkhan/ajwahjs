@@ -91,38 +91,38 @@ describe("Controller: ", () => {
   });
   it("action hanler whereType", async () => {
     await ajwahTest({
-      build: () => controller.action$.whereType("awesome"),
+      build: () => controller.action$.where((ac) => ac === "awesome"),
       act: () => {
         controller.dispatch("awesome");
       },
 
       verify: (states) => {
-        expect(states[0]).toEqual({ type: "awesome" });
+        expect(states[0]).toEqual("awesome");
       },
     });
   });
   it("action hanler whereTypes", async () => {
     await ajwahTest({
-      build: () => controller.action$.whereTypes("awesomeX", "awesome"),
+      build: () =>
+        controller.action$.where((ac) => ac === "awesomeX" || ac === "awesome"),
       act: () => {
         controller.dispatch("awesome");
       },
 
       verify: (states) => {
-        expect(states[0]).toEqual({ type: "awesome" });
+        expect(states[0]).toEqual("awesome");
       },
     });
   });
   it("action hanler where", async () => {
     await ajwahTest({
-      build: () =>
-        controller.action$.where((action) => action.type === "awesome"),
+      build: () => controller.action$.where((action) => action === "awesome"),
       act: () => {
         controller.dispatch("awesome");
       },
 
       verify: (states) => {
-        expect(states[0]).toEqual({ type: "awesome" });
+        expect(states[0]).toEqual("awesome");
       },
     });
   });
@@ -222,6 +222,21 @@ describe("Counter controller2: ", () => {
       },
 
       skip: 2,
+      wait: 10,
+      verify: (states) => {
+        expect(states[0]).toEqual("loading...");
+        expect(states[1]).toEqual("1");
+      },
+    });
+  });
+  it("async increment -2", async () => {
+    await ajwahTest({
+      build: () => controller.count2$,
+      act: () => {
+        controller.asyncInc2();
+      },
+
+      skip: 1,
       wait: 10,
       verify: (states) => {
         expect(states[0]).toEqual("loading...");

@@ -119,13 +119,10 @@ export abstract class StateController<S> {
    *
    * A powerful way to communicate among the controllers.
    */
-  dispatch(actionName: string | Action | symbol, payload?: any): void {
-    if (typeof actionName === "object") {
-      _dispatcher.next(actionName);
-      return;
-    }
-    _dispatcher.next({ type: actionName, payload });
+  dispatch(action: string | symbol | Action): void {
+    _dispatcher.next(action);
   }
+
   /**
    * This fuction merge the input state param with the current store state
    * @param state You might pass partial state.

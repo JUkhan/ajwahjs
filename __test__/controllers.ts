@@ -52,10 +52,26 @@ export class CounterController2 extends StateController<number> {
     await new Promise((resolve) => setTimeout(resolve, 10));
     this.inc();
   }
+  async asyncInc2() {
+    this.dispatch(new AsyncAction());
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    this.inc();
+  }
   get count$() {
     return merge(
-      this.action$.whereType("asyncInc").pipe(mapTo("loading...")),
+      this.action$.where((ac) => ac === "asyncInc").pipe(mapTo("loading...")),
       this.stream$.pipe(map((count) => `${count}`))
     );
   }
+
+  get count2$() {
+    return merge(
+      this.action$.isA(AsyncAction).pipe(mapTo("loading...")),
+      this.stream$.pipe(map((count) => `${count}`))
+    );
+  }
+}
+
+export class AsyncAction {
+  data: number;
 }
