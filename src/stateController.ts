@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, Subscription, merge, from } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, from } from "rxjs";
 import { map, distinctUntilChanged, mergeMap } from "rxjs/operators";
 
 import { Action } from "./action";
@@ -12,7 +12,7 @@ const _action$ = new Actions(_dispatcher);
  *- Dispatching actions
  *- Filtering actions
  *- Adding effeccts
- *- Communications among controllers
+ *- Communications among controllers (although controllers are independent)
  *- RxDart full features
  *
  *Every `StateController` requires an initial state which will be the state of the `StateController` before `emit` has been called.
@@ -39,8 +39,8 @@ const _action$ = new Actions(_dispatcher);
 export abstract class StateController<S> {
   private _store: BehaviorSubject<S>;
   private _sub: Subscription;
-  private _effSub?: Subscription;
-  private _mapSub?: Subscription;
+  //private _effSub?: Subscription;
+  //private _mapSub?: Subscription;
 
   constructor(initialState: S) {
     this._store = new BehaviorSubject<S>(initialState);
@@ -119,6 +119,7 @@ export abstract class StateController<S> {
    *
    * A powerful way to communicate among the controllers.
    */
+
   dispatch(action: string | symbol | Action): void {
     _dispatcher.next(action);
   }
@@ -155,33 +156,34 @@ export abstract class StateController<S> {
    *
    * ```ts
    * registerEffects(
-   *   action$.whereType('SearchInput')
+   *   action$.isA(SearchInput)
    *   .debounceTime(320)
    *   .switchMap((action) => pullData(action.payload))
    *   .map(res => ({type:'SearchResult', payload:res})),
    * );
    * ```
    */
-  registerEffects(...streams: Observable<Action>[]): void {
-    this._effSub?.unsubscribe();
-    this._effSub = merge(...streams).subscribe((action: Action) =>
-      this.dispatch(action)
-    );
-  }
+  // registerEffects(...streams: Observable<Action>[]): void {
+  //   this._effSub?.unsubscribe();
+  //   this._effSub = merge(...streams).subscribe((action: Action) =>
+  //     this.dispatch(action)
+  //   );
+  // }
+
   /**This function just like `registerEffects` but param `streams` return `Observable<State>` instead of `Observable<Action>`.
    * ```ts
    *this.mapActionToState(
-   *   this.action$.whereType("asyncInc").pipe(
+   *   this.action$.isA(AsyncInc).pipe(
    *      delay(1000),
    *      map((action) => this.state + 1)
    *  )
    * );
    *```
    */
-  mapActionToState(...streams: Observable<S>[]): void {
-    this._mapSub?.unsubscribe();
-    this._mapSub = merge(...streams).subscribe((res: S) => this.emit(res));
-  }
+  // mapActionToState(...streams: Observable<S>[]): void {
+  //   this._mapSub?.unsubscribe();
+  //   this._mapSub = merge(...streams).subscribe((res: S) => this.emit(res));
+  // }
 
   private remoteData<S extends StateController<any>>(
     controllerType: new () => S
@@ -249,7 +251,7 @@ export abstract class StateController<S> {
   /**This is a clean up funcction. */
   dispose(): void {
     this._sub.unsubscribe();
-    this._effSub?.unsubscribe();
+    //this._effSub?.unsubscribe();
   }
 }
 function isPlainObj(o: any) {

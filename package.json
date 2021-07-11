@@ -1,6 +1,6 @@
 {
   "name": "ajwahjs",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Framework agnostic state management tool without ceremonies and boilerplates",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -43,7 +43,6 @@
     "@rollup/plugin-replace": "^2.3.4",
     "@skypack/package-check": "^0.2.2",
     "@types/jest": "^26.0.23",
-    "@types/react": "^17.0.0",
     "ajwah-test": "^1.1.2",
     "babel-jest": "^26.6.3",
     "bundlesize": "^0.18.0",

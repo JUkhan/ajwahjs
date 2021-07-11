@@ -5,7 +5,7 @@ import {
   CounterController2,
 } from "./controllers";
 import { Get, RemoveController } from "../src/provider";
-import { mergeMap } from "rxjs/operators";
+import { map, mergeMap } from "rxjs/operators";
 
 describe("Controller: ", () => {
   new RemoteController();
@@ -20,6 +20,7 @@ describe("Controller: ", () => {
   it("initial state", async () => {
     await ajwahTest({
       build: () => controller.stream$,
+
       verify: (states) => {
         expect(states[0]).toEqual({ count: 0, loading: false });
       },
@@ -65,6 +66,22 @@ describe("Controller: ", () => {
       },
     });
   });
+  it("async increment2", async () => {
+    await ajwahTest({
+      build: () => controller.stream$,
+      act: () => {
+        controller.asyncInc2();
+      },
+      skip: 1,
+      wait: 10,
+
+      verify: (states) => {
+        expect(states[0]).toEqual({ count: 0, loading: true });
+        expect(states[1]).toEqual({ count: 1, loading: false });
+      },
+    });
+  });
+
   it("select", async () => {
     await ajwahTest({
       build: () => controller.select((state) => state.count),
@@ -152,6 +169,17 @@ describe("Controller: ", () => {
           .pipe(mergeMap((con) => con.stream$)),
       verify: (states) => {
         expect(states[0]).toBe("remote-controller");
+      },
+    });
+  });
+  it("remote stream", async () => {
+    await ajwahTest({
+      build: () =>
+        controller
+          .remoteStream<string>(RemoteController)
+          .pipe(map((s) => s.toUpperCase())),
+      verify: (states) => {
+        expect(states[0]).toBe("remote-controller".toUpperCase());
       },
     });
   });

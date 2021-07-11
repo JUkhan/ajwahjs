@@ -1,6 +1,7 @@
 import { merge } from "rxjs";
-import { map, mapTo } from "rxjs/operators";
+import { debounceTime, map, mapTo, tap } from "rxjs/operators";
 import { StateController } from "../src/stateController";
+import { effect } from "../src/effect";
 
 interface CounterState {
   count: number;
@@ -25,6 +26,14 @@ export class CounterController extends StateController<CounterState> {
     await this.delay(10);
     this.emit({ count: this.state.count + 1, loading: false });
   }
+
+  asyncInc2 = effect<void>((obj$) =>
+    obj$.pipe(
+      tap((_) => this.emit({ loading: true })),
+      debounceTime(10),
+      tap((_) => this.emit({ count: this.state.count + 1, loading: false }))
+    )
+  );
 
   delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
