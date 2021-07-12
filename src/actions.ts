@@ -5,6 +5,10 @@ import { Action } from "./action";
 export class Actions {
   constructor(private _dispatcher: BehaviorSubject<Action>) {}
 
+  whereType(actionType: string): Observable<Action> {
+    return this._dispatcher.pipe(filter((action) => action.type == actionType));
+  }
+
   where(predicate: (action: Action) => boolean): Observable<Action> {
     return this._dispatcher.pipe(filter(predicate));
   }

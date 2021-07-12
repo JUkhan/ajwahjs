@@ -12,7 +12,7 @@ const _action$ = new Actions(_dispatcher);
  *- Dispatching actions
  *- Filtering actions
  *- Adding effeccts
- *- Communications among controllers (although controllers are independent)
+ *- Communications among controllers (although controllers are independents)
  *- RxDart full features
  *
  *Every `StateController` requires an initial state which will be the state of the `StateController` before `emit` has been called.
@@ -39,8 +39,6 @@ const _action$ = new Actions(_dispatcher);
 export abstract class StateController<S> {
   private _store: BehaviorSubject<S>;
   private _sub: Subscription;
-  //private _effSub?: Subscription;
-  //private _mapSub?: Subscription;
 
   constructor(initialState: S) {
     this._store = new BehaviorSubject<S>(initialState);
@@ -114,14 +112,16 @@ export abstract class StateController<S> {
   /**Dispatching an action is just like firing an event.
    *
    *Whenever the acction is dispatched it notifies all the controllers
-   *those who override the `onAction(action Action)` method and also
-   *notifes all the effects - registered throughout the controllers.
+   *if you override the `onAction(action Action)` method.
    *
-   * A powerful way to communicate among the controllers.
+   * A simple way to communicate among the controllers.
    */
-
-  dispatch(action: string | symbol | Action): void {
-    _dispatcher.next(action);
+  dispatch(actionName: string | Action): void {
+    if (typeof actionName === "object") {
+      _dispatcher.next(actionName);
+      return;
+    }
+    _dispatcher.next({ type: actionName });
   }
 
   /**
@@ -140,50 +140,6 @@ export abstract class StateController<S> {
   importState(state: S) {
     this._store.next(state);
   }
-  /**
-   *This function registers the effect/s and also
-   *un-registers previous effeccts (if found any).
-   *
-   * `streams` pass one or more effects.
-   *
-   * Here is an example of a search effect:
-   *
-   * This effect start working when SearchInputAction is dispatched
-   * then wait 320 mills to receive subsequent actions(SearchInputAction) -
-   * when reach out time limit it sends a request to server and then dispatches
-   * [SearchResultAction] when server response come back. Now any controller can
-   * receive SearchResultAction who override [onAction] method.
-   *
-   * ```ts
-   * registerEffects(
-   *   action$.isA(SearchInput)
-   *   .debounceTime(320)
-   *   .switchMap((action) => pullData(action.payload))
-   *   .map(res => ({type:'SearchResult', payload:res})),
-   * );
-   * ```
-   */
-  // registerEffects(...streams: Observable<Action>[]): void {
-  //   this._effSub?.unsubscribe();
-  //   this._effSub = merge(...streams).subscribe((action: Action) =>
-  //     this.dispatch(action)
-  //   );
-  // }
-
-  /**This function just like `registerEffects` but param `streams` return `Observable<State>` instead of `Observable<Action>`.
-   * ```ts
-   *this.mapActionToState(
-   *   this.action$.isA(AsyncInc).pipe(
-   *      delay(1000),
-   *      map((action) => this.state + 1)
-   *  )
-   * );
-   *```
-   */
-  // mapActionToState(...streams: Observable<S>[]): void {
-  //   this._mapSub?.unsubscribe();
-  //   this._mapSub = merge(...streams).subscribe((res: S) => this.emit(res));
-  // }
 
   private remoteData<S extends StateController<any>>(
     controllerType: new () => S
@@ -251,7 +207,6 @@ export abstract class StateController<S> {
   /**This is a clean up funcction. */
   dispose(): void {
     this._sub.unsubscribe();
-    //this._effSub?.unsubscribe();
   }
 }
 function isPlainObj(o: any) {

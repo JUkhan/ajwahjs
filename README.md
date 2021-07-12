@@ -28,6 +28,14 @@ class CounterStateCtrl extends StateController<CounterState> {
     await delay(1000);
     this.emit({ count: this.state.count++, loading: false });
   }
+
+  asyncIncBy = effect<number>((num$) =>
+    num$.pipe(
+      tap((_) => this.emit({ loading: true })),
+      delay(1000),
+      tap((by) => this.emit({ count: this.state.count + by, loading: false }))
+    )
+  );
 }
 ```
 
@@ -41,6 +49,7 @@ csCtrl.stream$.subscrie(console.log);
 csCtrl.inc();
 csCtrl.dec();
 csCtrl.asyncInc();
+csCtrl.asyncIncBy(5);
 ```
 
 `React`

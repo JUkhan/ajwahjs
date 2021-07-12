@@ -2,6 +2,7 @@ import { merge } from "rxjs";
 import { debounceTime, map, mapTo, tap } from "rxjs/operators";
 import { StateController } from "../src/stateController";
 import { effect } from "../src/effect";
+import { Action } from "../src/action";
 
 interface CounterState {
   count: number;
@@ -68,7 +69,9 @@ export class CounterController2 extends StateController<number> {
   }
   get count$() {
     return merge(
-      this.action$.where((ac) => ac === "asyncInc").pipe(mapTo("loading...")),
+      this.action$
+        .where((ac) => ac.type === "asyncInc")
+        .pipe(mapTo("loading...")),
       this.stream$.pipe(map((count) => `${count}`))
     );
   }
@@ -81,6 +84,7 @@ export class CounterController2 extends StateController<number> {
   }
 }
 
-export class AsyncAction {
+export class AsyncAction implements Action {
+  type: any;
   data: number;
 }

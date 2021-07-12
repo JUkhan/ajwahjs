@@ -1,1 +1,3 @@
-export interface Action {}
+export interface Action {
+  type: any;
+}

@@ -108,38 +108,26 @@ describe("Controller: ", () => {
   });
   it("action hanler whereType", async () => {
     await ajwahTest({
-      build: () => controller.action$.where((ac) => ac === "awesome"),
+      build: () => controller.action$.whereType("awesome"),
       act: () => {
         controller.dispatch("awesome");
       },
 
       verify: (states) => {
-        expect(states[0]).toEqual("awesome");
+        expect(states[0].type).toEqual("awesome");
       },
     });
   });
-  it("action hanler whereTypes", async () => {
-    await ajwahTest({
-      build: () =>
-        controller.action$.where((ac) => ac === "awesomeX" || ac === "awesome"),
-      act: () => {
-        controller.dispatch("awesome");
-      },
 
-      verify: (states) => {
-        expect(states[0]).toEqual("awesome");
-      },
-    });
-  });
   it("action hanler where", async () => {
     await ajwahTest({
-      build: () => controller.action$.where((action) => action === "awesome"),
+      build: () => controller.action$.where((a) => a.type === "awesome"),
       act: () => {
         controller.dispatch("awesome");
       },
 
       verify: (states) => {
-        expect(states[0]).toEqual("awesome");
+        expect(states[0].type).toEqual("awesome");
       },
     });
   });
