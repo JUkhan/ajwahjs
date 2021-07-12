@@ -125,32 +125,16 @@ export default {
 };
 ```
 
-`Map Action to State`
+`Effectt`
 
 ```ts
-onInit() {
-    this.mapActionToState(
-      this.action$.isA(AsyncInc).pipe(
-        tap(action => this.emit({ loading: true})),
-        delay(500),
-        map(action => ({ loading: false, count: this.state.count + 1 }))
-      )
-    );
-  }
-```
-
-`Register Effectts`
-
-```ts
-onInit() {
-    this.registerEffects(
-        this.action$.isA(SearchInput).pipe(
-            debounceTime(320),
-            distinctUntilChanged(),
-            map(action => findTodos(action.text)))
-        )
-    );
-}
+asyncIncBy = effect<number>((num$) =>
+  num$.pipe(
+    tap((_) => this.emit({ loading: true })),
+    delay(1000),
+    tap((by) => this.emit({ count: this.state.count + by, loading: false }))
+  )
+);
 ```
 
 `Combining States`
