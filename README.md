@@ -134,9 +134,18 @@ export default {
 };
 ```
 
-`Effectt`
+`Effects`
 
 ```ts
+onInit() {
+    this.effectOnAction(
+      this.action$.isA(AsyncInc).pipe(
+        tap((_) => this.emit({ loading: true })),
+        delay(1000),
+        map((action) => ({ count: this.state.count + action.data, loading: false  }))
+    ));
+}
+
 asyncIncBy = effect<number>((num$) =>
   num$.pipe(
     tap((_) => this.emit({ loading: true })),
@@ -144,6 +153,7 @@ asyncIncBy = effect<number>((num$) =>
     tap((by) => this.emit({ count: this.state.count + by, loading: false }))
   )
 );
+
 ```
 
 `Combining States`

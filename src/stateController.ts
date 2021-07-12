@@ -203,7 +203,22 @@ export abstract class StateController<S> {
       mergeMap((ctrl) => ctrl.stream$)
     );
   }
-
+  /**
+   * Use this function inside `onInit()` method only
+   *
+   *`Example`
+   *```ts
+   *void onInit() {
+   *   effectOnAction(action$
+   *     .whereType('testEffectOnAction')
+   *     .map((event) => 101)
+   *   );
+   *}
+   *```
+   */
+  effectOnAction(aStream: Observable<S>) {
+    this._sub.add(aStream.subscribe((data) => this.emit(data)));
+  }
   /**This is a clean up funcction. */
   dispose(): void {
     this._sub.unsubscribe();

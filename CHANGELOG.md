@@ -1,3 +1,7 @@
+## 1.3.0
+
+exposed effectOnAction function
+
 ## 1.2.1
 
 removed registerEffects and mapActionToMap functions

@@ -171,6 +171,17 @@ describe("Controller: ", () => {
       },
     });
   });
+
+  it("testEffectOnActtion", async () => {
+    await ajwahTest({
+      build: () => controller.select((state) => state.count),
+      act: () => controller.dispatch("testEffectOnActtion"),
+      skip: 1,
+      verify: (states) => {
+        expect(states[0]).toBe(101);
+      },
+    });
+  });
 });
 
 describe("Counter controller2: ", () => {

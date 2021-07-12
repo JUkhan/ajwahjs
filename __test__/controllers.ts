@@ -13,6 +13,13 @@ export class CounterController extends StateController<CounterState> {
   constructor() {
     super({ count: 0, loading: false });
   }
+  onInit() {
+    this.effectOnAction(
+      this.action$
+        .whereType("testEffectOnActtion")
+        .pipe(map((_) => ({ count: 101 })))
+    );
+  }
 
   increment() {
     this.emit({ count: this.state.count + 1 });
