@@ -125,11 +125,11 @@ export abstract class StateController<S> {
   }
 
   /**
-   * This fuction merge the input state param with the current store state
+   * This fuction merge the input `state` param with the current `store state`.
    * @param state You might pass partial state.
    *
    */
-  emit(state: any) {
+  emit(state: S) {
     if (isPlainObj(state)) {
       this._store.next(Object.assign({}, this.state, state));
       return;

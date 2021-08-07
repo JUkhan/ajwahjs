@@ -30,14 +30,14 @@ export class CounterController extends StateController<CounterState> {
   }
 
   async asyncInc() {
-    this.emit({ loading: true });
+    this.emit({ loading: true } as any);
     await this.delay(10);
     this.emit({ count: this.state.count + 1, loading: false });
   }
 
   asyncInc2 = effect<void>((obj$) =>
     obj$.pipe(
-      tap((_) => this.emit({ loading: true })),
+      tap((_) => this.emit({ loading: true } as any)),
       debounceTime(10),
       tap((_) => this.emit({ count: this.state.count + 1, loading: false }))
     )

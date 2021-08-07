@@ -1,6 +1,16 @@
 # ajwahjs
 
-Framework agnostic state management tool without ceremonies and boilerplates
+Framework agnostic state management tool without ceremonies and boilerplates.
+
+Reactive state management library. Manage your application's states, effects, and actions easy way. Make apps more scalable with a unidirectional data-flow.
+
+Every `StateController` has the following features:
+
+- Dispatching actions
+- Filtering actions
+- Adding effects
+- Communications among Controllers[`Although they are independents`]
+- RxJs full features
 
 `CounterState`
 
@@ -14,6 +24,7 @@ class CounterStateCtrl extends StateController<CounterState> {
   constructor() {
     super({ count: 0, loading: false });
   }
+  onInit() {}
 
   inc() {
     this.emit({ count: this.state.count++ });
