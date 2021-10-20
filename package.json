@@ -1,6 +1,6 @@
 {
   "name": "ajwahjs",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Framework agnostic state management tool without ceremonies and boilerplates",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

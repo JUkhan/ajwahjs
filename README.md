@@ -10,7 +10,6 @@ Every `StateController` has the following features:
 - Filtering actions
 - Adding effects
 - Communications among Controllers[`Although they are independents`]
-- RxJs full features
 
 `CounterState`
 
@@ -82,7 +81,7 @@ const CounterComponent = () => {
       <button className="btn" onClick={() => csCtrl.asyncInc()}>
         async(+)
       </button>
-      {data.loading ? "loading..." : data.count}
+      {data.loading ? 'loading...' : data.count}
     </p>
   );
 };
@@ -92,14 +91,14 @@ const CounterComponent = () => {
 
 ```ts
 @Component({
-  selector: "app-counter",
+  selector: 'app-counter',
   template: `
     <p>
       <button class="btn" (click)="csCtrl.inc()">+</button>
       <button class="btn" (click)="csCtrl.dec()">-</button>
       <button class="btn" (click)="csCtrl.asyncIn())">async(+)</button>
       <span *ngIf="csCtrl.stream$ | async as state"
-        >{{ state.loading ? "loading..." : state.count }}
+        >{{ state.loading ? 'loading...' : state.count }}
       </span>
     </p>
   `,

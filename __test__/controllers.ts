@@ -1,8 +1,8 @@
-import { merge } from "rxjs";
-import { debounceTime, map, mapTo, tap } from "rxjs/operators";
-import { StateController } from "../src/stateController";
-import { effect } from "../src/effect";
-import { Action } from "../src/action";
+import { merge } from 'rxjs';
+import { debounceTime, map, mapTo, tap } from 'rxjs/operators';
+import { StateController } from '../src/stateController';
+import { effect } from '../src/effect';
+import { Action } from '../src/action';
 
 interface CounterState {
   count: number;
@@ -16,7 +16,7 @@ export class CounterController extends StateController<CounterState> {
   onInit() {
     this.effectOnAction(
       this.action$
-        .whereType("testEffectOnActtion")
+        .whereType('testEffectOnActtion')
         .pipe(map((_) => ({ count: 101 })))
     );
   }
@@ -30,14 +30,14 @@ export class CounterController extends StateController<CounterState> {
   }
 
   async asyncInc() {
-    this.emit({ loading: true } as any);
+    this.emit({ loading: true });
     await this.delay(10);
     this.emit({ count: this.state.count + 1, loading: false });
   }
 
   asyncInc2 = effect<void>((obj$) =>
     obj$.pipe(
-      tap((_) => this.emit({ loading: true } as any)),
+      tap((_) => this.emit({ loading: true })),
       debounceTime(10),
       tap((_) => this.emit({ count: this.state.count + 1, loading: false }))
     )
@@ -50,7 +50,7 @@ export class CounterController extends StateController<CounterState> {
 
 export class RemoteController extends StateController<String> {
   constructor() {
-    super("remote-controller");
+    super('remote-controller');
   }
 }
 
@@ -65,7 +65,7 @@ export class CounterController2 extends StateController<number> {
     this.emit(this.state - 1);
   }
   async asyncInc() {
-    this.dispatch("asyncInc");
+    this.dispatch('asyncInc');
     await new Promise((resolve) => setTimeout(resolve, 10));
     this.inc();
   }
@@ -77,15 +77,15 @@ export class CounterController2 extends StateController<number> {
   get count$() {
     return merge(
       this.action$
-        .where((ac) => ac.type === "asyncInc")
-        .pipe(mapTo("loading...")),
+        .where((ac) => ac.type === 'asyncInc')
+        .pipe(mapTo('loading...')),
       this.stream$.pipe(map((count) => `${count}`))
     );
   }
 
   get count2$() {
     return merge(
-      this.action$.isA(AsyncAction).pipe(mapTo("loading...")),
+      this.action$.isA(AsyncAction).pipe(mapTo('loading...')),
       this.stream$.pipe(map((count) => `${count}`))
     );
   }

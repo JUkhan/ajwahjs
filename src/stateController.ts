@@ -1,10 +1,10 @@
-import { BehaviorSubject, Observable, Subscription, from } from "rxjs";
-import { map, distinctUntilChanged, mergeMap } from "rxjs/operators";
+import { BehaviorSubject, Observable, Subscription, from } from 'rxjs';
+import { map, distinctUntilChanged, mergeMap } from 'rxjs/operators';
 
-import { Action } from "./action";
-import { Actions } from "./actions";
+import { Action } from './action';
+import { Actions } from './actions';
 
-const _dispatcher = new BehaviorSubject<Action>({ type: "@INIT" });
+const _dispatcher = new BehaviorSubject<Action>({ type: '@INIT' });
 const _action$ = new Actions(_dispatcher);
 
 /**
@@ -73,7 +73,7 @@ export abstract class StateController<S> {
    */
   select<T = any>(mapFn: (state: S) => any): Observable<T> {
     let mapped$;
-    if (typeof mapFn === "function") {
+    if (typeof mapFn === 'function') {
       mapped$ = this._store.pipe(map((source: any) => mapFn(source)));
     } else {
       throw new TypeError(
@@ -117,7 +117,7 @@ export abstract class StateController<S> {
    * A simple way to communicate among the controllers.
    */
   dispatch(actionName: string | Action): void {
-    if (typeof actionName === "object") {
+    if (typeof actionName === 'object') {
       _dispatcher.next(actionName);
       return;
     }
@@ -129,12 +129,12 @@ export abstract class StateController<S> {
    * @param state You might pass partial state.
    *
    */
-  emit(state: S) {
+  emit(state: Partial<S>) {
     if (isPlainObj(state)) {
       this._store.next(Object.assign({}, this.state, state));
       return;
     }
-    this._store.next(state);
+    this._store.next(state as any);
   }
 
   importState(state: S) {
@@ -225,7 +225,7 @@ export abstract class StateController<S> {
   }
 }
 function isPlainObj(o: any) {
-  return o ? typeof o == "object" && o.constructor == Object : false;
+  return o ? typeof o == 'object' && o.constructor == Object : false;
 }
 class RemoteControllerAction implements Action {
   constructor(public type: (state: any) => void, public payload: any) {}
