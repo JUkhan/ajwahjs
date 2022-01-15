@@ -3,6 +3,7 @@ import { map, distinctUntilChanged, mergeMap } from 'rxjs/operators';
 
 import { Action } from './action';
 import { Actions } from './actions';
+import { shallowEqual } from './shallowEqual';
 
 const _dispatcher = new BehaviorSubject<Action>({ type: '@INIT' });
 const _action$ = new Actions(_dispatcher);
@@ -71,7 +72,7 @@ export abstract class StateController<S> {
   /**
    *Return the part of the current state of the controller as a Observable<S>.
    */
-  select<T = any>(mapFn: (state: S) => any): Observable<T> {
+  select<T = any>(mapFn: (state: S) => T): Observable<T> {
     let mapped$;
     if (typeof mapFn === 'function') {
       mapped$ = this._store.pipe(map((source: any) => mapFn(source)));
@@ -81,7 +82,9 @@ export abstract class StateController<S> {
           ` expected 'string' or 'function'`
       );
     }
-    return mapped$.pipe(distinctUntilChanged());
+    return mapped$.pipe(
+      distinctUntilChanged((prev, curren) => shallowEqual(prev, curren))
+    );
   }
 
   /**
@@ -105,7 +108,7 @@ export abstract class StateController<S> {
   /**
    * Return the current state of the controller.
    */
-  get state() {
+  get state(): S {
     return this._store.value;
   }
 

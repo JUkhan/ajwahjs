@@ -1,13 +1,13 @@
-import { ajwahTest } from "ajwah-test";
+import { ajwahTest } from 'ajwah-test';
 import {
   CounterController,
   RemoteController,
   CounterController2,
-} from "./controllers";
-import { Get, RemoveController } from "../src/provider";
-import { map, mergeMap } from "rxjs/operators";
+} from './controllers';
+import { Get, RemoveController } from '../src/provider';
+import { map, mergeMap } from 'rxjs/operators';
 
-describe("Controller: ", () => {
+describe('Controller: ', () => {
   new RemoteController();
   let controller: CounterController;
   beforeEach(() => {
@@ -17,7 +17,7 @@ describe("Controller: ", () => {
     RemoveController(CounterController);
   });
 
-  it("initial state", async () => {
+  it('initial state', async () => {
     await ajwahTest({
       build: () => controller.stream$,
 
@@ -26,7 +26,7 @@ describe("Controller: ", () => {
       },
     });
   });
-  it("increment", async () => {
+  it('increment', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       act: () => {
@@ -39,7 +39,7 @@ describe("Controller: ", () => {
     });
   });
 
-  it("decrement", async () => {
+  it('decrement', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       act: () => {
@@ -52,7 +52,7 @@ describe("Controller: ", () => {
     });
   });
 
-  it("async increment", async () => {
+  it('async increment', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       act: () => {
@@ -66,7 +66,7 @@ describe("Controller: ", () => {
       },
     });
   });
-  it("async increment2", async () => {
+  it('async increment2', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       act: () => {
@@ -82,7 +82,7 @@ describe("Controller: ", () => {
     });
   });
 
-  it("select", async () => {
+  it('select', async () => {
     await ajwahTest({
       build: () => controller.select((state) => state.count),
       act: () => {
@@ -94,7 +94,7 @@ describe("Controller: ", () => {
       },
     });
   });
-  it("import state", async () => {
+  it('import state', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       act: () => {
@@ -106,37 +106,37 @@ describe("Controller: ", () => {
       },
     });
   });
-  it("action hanler whereType", async () => {
+  it('action hanler whereType', async () => {
     await ajwahTest({
-      build: () => controller.action$.whereType("awesome"),
+      build: () => controller.action$.whereType('awesome'),
       act: () => {
-        controller.dispatch("awesome");
+        controller.dispatch('awesome');
       },
 
       verify: (states) => {
-        expect(states[0].type).toEqual("awesome");
+        expect(states[0].type).toEqual('awesome');
       },
     });
   });
 
-  it("action hanler where", async () => {
+  it('action hanler where', async () => {
     await ajwahTest({
-      build: () => controller.action$.where((a) => a.type === "awesome"),
+      build: () => controller.action$.where((a) => a.type === 'awesome'),
       act: () => {
-        controller.dispatch("awesome");
+        controller.dispatch('awesome');
       },
 
       verify: (states) => {
-        expect(states[0].type).toEqual("awesome");
+        expect(states[0].type).toEqual('awesome');
       },
     });
   });
-  it("dispose", async () => {
+  it('dispose', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       act: () => {
         controller.dispose();
-        controller.dispatch("inc");
+        controller.dispatch('inc');
       },
 
       verify: (states) => {
@@ -145,37 +145,37 @@ describe("Controller: ", () => {
       },
     });
   });
-  it("remote state", async () => {
+  it('remote state', async () => {
     const state = await controller.remoteState<string>(RemoteController);
-    expect(state).toBe("remote-controller");
+    expect(state).toBe('remote-controller');
   });
-  it("remote controller", async () => {
+  it('remote controller', async () => {
     await ajwahTest({
       build: () =>
         controller
           .remoteController(RemoteController)
           .pipe(mergeMap((con) => con.stream$)),
       verify: (states) => {
-        expect(states[0]).toBe("remote-controller");
+        expect(states[0]).toBe('remote-controller');
       },
     });
   });
-  it("remote stream", async () => {
+  it('remote stream', async () => {
     await ajwahTest({
       build: () =>
         controller
           .remoteStream<string>(RemoteController)
           .pipe(map((s) => s.toUpperCase())),
       verify: (states) => {
-        expect(states[0]).toBe("remote-controller".toUpperCase());
+        expect(states[0]).toBe('remote-controller'.toUpperCase());
       },
     });
   });
 
-  it("testEffectOnActtion", async () => {
+  it('testEffectOnActtion', async () => {
     await ajwahTest({
       build: () => controller.select((state) => state.count),
-      act: () => controller.dispatch("testEffectOnActtion"),
+      act: () => controller.dispatch('testEffectOnActtion'),
       skip: 1,
       verify: (states) => {
         expect(states[0]).toBe(101);
@@ -184,7 +184,7 @@ describe("Controller: ", () => {
   });
 });
 
-describe("Counter controller2: ", () => {
+describe('Counter controller2: ', () => {
   let controller: CounterController2;
   beforeEach(() => {
     controller = Get(CounterController2);
@@ -193,7 +193,7 @@ describe("Counter controller2: ", () => {
     RemoveController(CounterController2);
   });
 
-  it("initial state", async () => {
+  it('initial state', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       verify: (states) => {
@@ -201,7 +201,7 @@ describe("Counter controller2: ", () => {
       },
     });
   });
-  it("increment", async () => {
+  it('increment', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       act: () => {
@@ -214,7 +214,7 @@ describe("Counter controller2: ", () => {
     });
   });
 
-  it("decrement", async () => {
+  it('decrement', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       act: () => {
@@ -227,7 +227,7 @@ describe("Counter controller2: ", () => {
     });
   });
 
-  it("async increment", async () => {
+  it('async increment', async () => {
     await ajwahTest({
       build: () => controller.stream$,
       act: () => {
@@ -241,7 +241,7 @@ describe("Counter controller2: ", () => {
     });
   });
 
-  it("async increment", async () => {
+  it('async increment', async () => {
     await ajwahTest({
       build: () => controller.count$,
       act: () => {
@@ -251,12 +251,12 @@ describe("Counter controller2: ", () => {
       skip: 2,
       wait: 10,
       verify: (states) => {
-        expect(states[0]).toEqual("loading...");
-        expect(states[1]).toEqual("1");
+        expect(states[0]).toEqual('loading...');
+        expect(states[1]).toEqual('1');
       },
     });
   });
-  it("async increment -2", async () => {
+  it('async increment -2', async () => {
     await ajwahTest({
       build: () => controller.count2$,
       act: () => {
@@ -266,8 +266,8 @@ describe("Counter controller2: ", () => {
       skip: 1,
       wait: 10,
       verify: (states) => {
-        expect(states[0]).toEqual("loading...");
-        expect(states[1]).toEqual("1");
+        expect(states[0]).toEqual('loading...');
+        expect(states[1]).toEqual('1');
       },
     });
   });
