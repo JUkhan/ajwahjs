@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable, Subscription, from } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, from, Subject } from 'rxjs';
 import { map, distinctUntilChanged, mergeMap } from 'rxjs/operators';
 
 import { Action } from './action';
@@ -92,7 +92,9 @@ export abstract class StateController<S> {
    */
 
   get stream$(): Observable<S> {
-    return this._store.pipe(distinctUntilChanged());
+    return this._store.pipe(
+      distinctUntilChanged((prev, curren) => shallowEqual(prev, curren))
+    );
   }
 
   /**
@@ -225,6 +227,32 @@ export abstract class StateController<S> {
   /**This is a clean up funcction. */
   dispose(): void {
     this._sub.unsubscribe();
+  }
+  /**
+   * ```ts
+   * Example
+   *
+   * searchProduct = effect<string>(name$ => name$.pipe(
+   *     debounceTime(230),
+   *     distinctUntilChanged(),
+   *     tap(_=>this.emit({status:'loading'})
+   *     map(name => name.toUpperCase()),
+   *     switchMap(name => api.searchProduct(name)),
+   *     tap(products => this.emit({status:'loaded', products}))
+   *  )
+   * );
+   * ```
+   *
+   */
+
+  effect<T>(
+    fx: (arg$: Observable<T>) => Observable<Partial<S>>
+  ): (arg: T) => void {
+    const subject = new Subject<T>();
+    fx(subject).subscribe((e) => this.emit(e));
+    return (arg: T) => {
+      subject.next(arg);
+    };
   }
 }
 function isPlainObj(o: any) {

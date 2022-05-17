@@ -1,8 +1,9 @@
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject } from 'rxjs';
 
 /**
  * ```ts
- * Example
+ *
+ *  Example
  *
  * searchProduct = effect<string>(name$ => name$.pipe(
  *     debounceTime(230),
