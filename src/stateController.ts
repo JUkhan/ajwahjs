@@ -238,7 +238,7 @@ export abstract class StateController<S> {
    *     tap(_=>this.emit({status:'loading'})
    *     map(name => name.toUpperCase()),
    *     switchMap(name => api.searchProduct(name)),
-   *     tap(products => this.emit({status:'loaded', products}))
+   *     map(products => ({status:'loaded', products}))
    *  )
    * );
    * ```
