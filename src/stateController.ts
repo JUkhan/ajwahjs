@@ -232,7 +232,7 @@ export abstract class StateController<S> {
    * ```ts
    * Example
    *
-   * searchProduct = effect<string>(name$ => name$.pipe(
+   * searchProduct = this.effect<string>(name$ => name$.pipe(
    *     debounceTime(230),
    *     distinctUntilChanged(),
    *     tap(_=>this.emit({status:'loading'})

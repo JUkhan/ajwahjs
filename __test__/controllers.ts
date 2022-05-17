@@ -1,7 +1,6 @@
 import { merge } from 'rxjs';
 import { debounceTime, map, mapTo, tap } from 'rxjs/operators';
 import { StateController } from '../src/stateController';
-//import { effect } from '../src/effect';
 import { Action } from '../src/action';
 
 interface CounterState {
