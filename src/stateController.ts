@@ -249,7 +249,7 @@ export abstract class StateController<S> {
     fx: (arg$: Observable<T>) => Observable<Partial<S>>
   ): (arg: T) => void {
     const subject = new Subject<T>();
-    fx(subject).subscribe((e) => this.emit(e));
+    this._sub.add(fx(subject).subscribe((e) => this.emit(e)));
     return (arg: T) => {
       subject.next(arg);
     };

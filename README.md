@@ -39,11 +39,11 @@ class CounterStateCtrl extends StateController<CounterState> {
     this.emit({ count: this.state.count++, loading: false });
   }
 
-  asyncIncBy = effect<number>((num$) =>
+  asyncIncBy = this.effect<number>((num$) =>
     num$.pipe(
       tap((_) => this.emit({ loading: true })),
       delay(1000),
-      tap((by) => this.emit({ count: this.state.count + by, loading: false }))
+      map((by) => ({ count: this.state.count + by, loading: false }))
     )
   );
 }
