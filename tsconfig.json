@@ -1,31 +1,26 @@
 {
   "compilerOptions": {
-    "sourceMap": true,
-    "module": "es2015",
-    "target": "es2017",
-    "moduleResolution": "node",
-    "outDir": "dist",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
-    "declaration": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "noEmit": true,
-    "allowSyntheticDefaultImports": true,
-    "lib": ["esnext"],
+
+    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "noImplicitReturns": true,
+    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "jsx": "react"
+    "declaration": true,
+    "typeRoots": ["./dist/index.d.ts"]
   },
-  "include": ["src"],
-  "exclude": [
-    "node_modules",
-    "app",
-    "examples",
-    "cypress",
-    "src/*.test.ts",
-    "src/*.test.tsx",
-    "src/__mocks__",
-    "__test__"
-  ]
+  "include": ["src","./index.ts"]
+  
 }
