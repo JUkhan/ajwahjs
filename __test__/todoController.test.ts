@@ -1,7 +1,8 @@
+import { expect, describe, it, beforeEach, afterEach } from 'vitest';
 import { ajwahTest } from 'ajwah-test';
 import { TodoController, Todoilter } from './todoCoonroller';
 import { Get, RemoveController } from '../src/provider';
-import { map, mergeMap } from 'rxjs/operators';
+
 
 describe('Controller: ', () => {
   let controller: TodoController;
